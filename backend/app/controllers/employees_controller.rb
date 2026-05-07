@@ -41,4 +41,35 @@ class EmployeesController < ApplicationController
       data: employee
     }
   end
+
+  def create
+    employee = Employee.new(employee_params)
+
+    if employee.save
+      render json: {
+        data: employee
+      }, status: :created
+    else
+      render json: {
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid input',
+          details: employee.errors
+        }
+      }, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def employee_params
+    params.require(:employee).permit(
+      :full_name,
+      :job_title,
+      :country,
+      :salary,
+      :currency,
+      :department
+    )
+  end
 end
