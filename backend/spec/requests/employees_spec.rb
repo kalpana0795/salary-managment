@@ -58,4 +58,48 @@ RSpec.describe 'Employees API', type: :request do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  describe 'POST /employees' do
+    let(:valid_params) do
+      {
+        employee: {
+          full_name: 'John Doe',
+          job_title: 'Engineer',
+          country: 'India',
+          salary: 75000,
+          currency: 'USD',
+          department: 'Engineering'
+        }
+      }
+    end
+
+    it 'creates a new employee' do
+      expect {
+        post '/employees', params: valid_params
+      }.to change(Employee, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+
+      body = JSON.parse(response.body)
+
+      expect(body['data']['full_name']).to eq('John Doe')
+    end
+
+    it 'returns validation errors for invalid params' do
+      invalid_params = {
+        employee: {
+          full_name: '',
+          salary: 0
+        }
+      }
+
+      post '/employees', params: invalid_params
+
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      body = JSON.parse(response.body)
+
+      expect(body['error']).to be_present
+    end
+  end
 end
