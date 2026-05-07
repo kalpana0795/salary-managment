@@ -101,6 +101,12 @@ RSpec.describe 'Employees API', type: :request do
 
       expect(body['error']).to be_present
     end
+
+    it 'returns bad request when employee param is missing' do
+      post '/employees', params: {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe 'PATCH /employees/:id' do
