@@ -26,5 +26,16 @@ RSpec.describe 'Employees API', type: :request do
 
       expect(body['data'].length).to eq(5)
     end
+
+    it 'filters employees by country' do
+      create(:employee, country: 'USA')
+
+      get '/employees', params: { country: 'India' }
+
+      body = JSON.parse(response.body)
+
+      expect(body['data'].length).to eq(3)
+      expect(body['data'][0]['country']).to eq('India')
+    end
   end
 end
