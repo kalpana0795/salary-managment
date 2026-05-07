@@ -102,4 +102,32 @@ RSpec.describe 'Employees API', type: :request do
       expect(body['error']).to be_present
     end
   end
+
+  describe 'PATCH /employees/:id' do
+    let!(:employee) { create(:employee, full_name: 'Old Name') }
+
+    it 'updates an employee' do
+      patch "/employees/#{employee.id}", params: {
+        employee: {
+          full_name: 'New Name'
+        }
+      }
+
+      expect(response).to have_http_status(:ok)
+
+      body = JSON.parse(response.body)
+
+      expect(body['data']['full_name']).to eq('New Name')
+    end
+
+    it 'returns validation errors for invalid update' do
+      patch "/employees/#{employee.id}", params: {
+        employee: {
+          salary: 0
+        }
+      }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
 end
