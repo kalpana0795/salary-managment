@@ -60,6 +60,24 @@ class EmployeesController < ApplicationController
     end
   end
 
+  def update
+    employee = Employee.find(params[:id])
+
+    if employee.update(employee_params)
+      render json: {
+        data: employee
+      }
+    else
+      render json: {
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid input',
+          details: employee.errors
+        }
+      }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def employee_params
