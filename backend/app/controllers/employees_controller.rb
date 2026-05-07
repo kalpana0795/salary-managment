@@ -15,6 +15,9 @@ class EmployeesController < ApplicationController
       :department
     )
 
+    employees = employees.where(country: params[:country]) if params[:country].present?
+    employees = employees.where(job_title: params[:job_title]) if params[:job_title].present?
+
     total = employees.size
 
     employees = employees
