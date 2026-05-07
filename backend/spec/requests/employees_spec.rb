@@ -130,4 +130,16 @@ RSpec.describe 'Employees API', type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end
+
+  describe 'DELETE /employees/:id' do
+    let!(:employee) { create(:employee) }
+
+    it 'deletes an employee' do
+      expect {
+        delete "/employees/#{employee.id}"
+      }.to change(Employee, :count).by(-1)
+
+      expect(response).to have_http_status(:no_content)
+    end
+  end
 end
