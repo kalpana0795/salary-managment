@@ -37,6 +37,20 @@ RSpec.describe 'Employees API', type: :request do
       expect(body['data'].length).to eq(3)
       expect(body['data'][0]['country']).to eq('India')
     end
+
+    it 'sorts employees by salary descending' do
+      create(:employee, salary: 30000)
+      create(:employee, salary: 400000)
+
+      get '/employees', params: {
+        sort_by: 'salary',
+        order: 'desc'
+      }
+
+      body = JSON.parse(response.body)
+
+      expect(body['data'].first['salary']).to eq(400000)
+    end
   end
 
   describe 'GET /employees/:id' do

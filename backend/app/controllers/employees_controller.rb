@@ -24,6 +24,14 @@ class EmployeesController < ApplicationController
                   .offset((page - 1) * per_page)
                   .limit(per_page)
 
+    if params[:sort_by].present? &&
+      Employee::ALLOWED_SORT_COLUMNS.include?(params[:sort_by])
+
+      order = params[:order] == 'desc' ? :desc : :asc
+
+      employees = employees.order(params[:sort_by] => order)
+    end
+
     render json: {
       data: employees,
       meta: {
