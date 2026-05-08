@@ -23,7 +23,9 @@ class InsightsController < ApplicationController
   end
 
   def distribution
-    result = Insights::DistributionService.call
+    result = Insights::DistributionService.call(
+      country: params[:country]
+    )
 
     render json: {
       data: result
