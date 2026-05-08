@@ -18,4 +18,23 @@ RSpec.describe 'Insights API', type: :request do
       expect(body['data']['max_salary']).to eq(100000)
     end
   end
+
+  describe 'GET /insights/salary-by-title' do
+    it 'returns average salary for job title' do
+      create(:employee,
+            country: 'India',
+            job_title: 'Engineer',
+            salary: 100000)
+
+      get '/insights/salary-by-title',
+          params: {
+            country: 'India',
+            job_title: 'Engineer'
+          }
+
+      body = JSON.parse(response.body)
+
+      expect(body['data']['avg_salary']).to eq(100000.0)
+    end
+  end
 end
