@@ -38,6 +38,27 @@ RSpec.describe 'Insights API', type: :request do
     end
   end
 
+  describe 'GET /insights/distribution' do
+    before do
+      create(:employee, salary: 30_000)
+      create(:employee, salary: 70_000)
+      create(:employee, salary: 150_000)
+    end
+
+    it 'returns salary distribution buckets' do
+      get '/insights/distribution'
+
+      expect(response).to have_http_status(:ok)
+
+      body = JSON.parse(response.body)
+
+      expect(body['data']).to be_an(Array)
+
+      expect(body['data'].first)
+        .to include('range', 'count')
+    end
+  end
+
   describe 'GET /insights/outliers' do
     before do
       20.times do
