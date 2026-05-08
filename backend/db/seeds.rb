@@ -1,9 +1,34 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+require Rails.root.join('app/lib/employee_seed_generator')
+
+puts 'Starting employee seed...'
+
+start_time = Time.current
+
+Employee.delete_all
+
+generator = EmployeeSeedGenerator.new
+
+batch_size = 1000
+total_records = 10_000
+
+employees = []
+
+total_records.times do |index|
+  employees << generator.generate
+
+  if employees.size >= batch_size
+    Employee.insert_all(employees)
+
+    puts "Inserted #{index + 1} employees"
+
+    employees = []
+  end
+end
+
+Employee.insert_all(employees) if employees.any?
+
+duration = Time.current - start_time
+
+puts "Done!"
+puts "Total Employees: #{Employee.count}"
+puts "Completed in #{duration.round(2)} seconds"
