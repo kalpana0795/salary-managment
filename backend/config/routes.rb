@@ -12,4 +12,6 @@ Rails.application.routes.draw do
 
   get '/insights/salary', to: 'insights#salary'
   get '/insights/salary-by-title', to: 'insights#salary_by_title'
+  get '/insights/distribution', to: 'insights#distribution'
+  get '/insights/outliers', to: 'insights#outliers'
 end

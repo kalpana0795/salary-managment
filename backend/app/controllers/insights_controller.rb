@@ -21,4 +21,30 @@ class InsightsController < ApplicationController
       data: result
     }
   end
+
+  def distribution
+    result = Insights::DistributionService.call
+
+    render json: {
+      data: result
+    }
+  end
+
+  def outliers
+    employees = Insights::OutliersService.call(
+      country: params[:country]
+    )
+
+    render json: {
+      data: employees.as_json(
+        only: %i[
+          id
+          full_name
+          job_title
+          country
+          salary
+        ]
+      )
+    }
+  end
 end

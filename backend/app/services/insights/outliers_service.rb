@@ -2,8 +2,11 @@ module Insights
   class OutliersService
     STDDEV_THRESHOLD = 2
 
-    def self.call
-      salaries = Employee.pluck(:salary).map(&:to_f)
+    def self.call(country: nil)
+      scope = Employee.all
+      scope = scope.where(country: country) if country.present?
+
+      salaries = scope.pluck(:salary).map(&:to_f)
 
       return [] if salaries.size < 2
 
@@ -19,7 +22,6 @@ module Insights
       upper = mean + (STDDEV_THRESHOLD * stddev)
 
       Employee.where('salary < ? OR salary > ?', lower, upper)
-              .select(:id, :full_name, :job_title, :salary)
     end
   end
 end
