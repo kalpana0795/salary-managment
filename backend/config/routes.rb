@@ -9,4 +9,6 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :employees, only: [:index, :show, :create, :update, :destroy]
+
+  get '/insights/salary', to: 'insights#salary'
 end
