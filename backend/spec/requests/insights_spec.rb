@@ -37,4 +37,31 @@ RSpec.describe 'Insights API', type: :request do
       expect(body['data']['avg_salary']).to eq(100000.0)
     end
   end
+
+  describe 'GET /insights/outliers' do
+    before do
+      20.times do
+        create(:employee, salary: 100_000)
+      end
+
+      create(
+        :employee,
+        full_name: 'High Salary Employee',
+        salary: 1_000_000
+      )
+    end
+
+    it 'returns salary outliers' do
+      get '/insights/outliers'
+
+      expect(response).to have_http_status(:ok)
+
+      body = JSON.parse(response.body)
+
+      expect(body['data'].length).to eq(1)
+
+      expect(body['data'][0]['full_name'])
+        .to eq('High Salary Employee')
+    end
+  end
 end
