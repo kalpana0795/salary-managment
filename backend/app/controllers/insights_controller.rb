@@ -10,4 +10,15 @@ class InsightsController < ApplicationController
       data: result
     }
   end
+
+  def salary_by_title
+    result = Insights::SalaryByTitleService.call(
+      country: params[:country],
+      job_title: params[:job_title]
+    )
+
+    render json: {
+      data: result
+    }
+  end
 end
