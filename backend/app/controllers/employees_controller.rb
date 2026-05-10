@@ -62,7 +62,7 @@ class EmployeesController < ApplicationController
         error: {
           code: 'VALIDATION_ERROR',
           message: 'Invalid input',
-          details: employee.errors
+          details: employee.errors.full_messages
         }
       }, status: :unprocessable_entity
     end
@@ -80,7 +80,7 @@ class EmployeesController < ApplicationController
         error: {
           code: 'VALIDATION_ERROR',
           message: 'Invalid input',
-          details: employee.errors
+          details: employee.errors.full_messages
         }
       }, status: :unprocessable_entity
     end

@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import Alert from '@mui/material/Alert';
 
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -16,6 +17,8 @@ import { Employee } from '@/types/employee';
 interface Props {
   open: boolean;
   employee?: Employee | null;
+  errors?: string[];
+  loading?: boolean;
   onClose: () => void;
   onSubmit: (payload: Partial<Employee>) => void;
 }
@@ -23,6 +26,8 @@ interface Props {
 export default function EmployeeFormDialog({
   open,
   employee,
+  errors,
+  loading,
   onClose,
   onSubmit,
 }: Props) {
@@ -44,6 +49,15 @@ export default function EmployeeFormDialog({
         salary: String(employee.salary),
         currency: employee.currency,
         department: employee.department,
+      });
+    } else {
+      setForm({
+        full_name: '',
+        job_title: '',
+        country: '',
+        salary: '',
+        currency: '',
+        department: '',
       });
     }
   }, [employee]);
@@ -73,6 +87,16 @@ export default function EmployeeFormDialog({
 
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 1 }}>
+          {errors && errors.length > 0 && (
+            <Alert severity="error">
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {errors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            </Alert>
+          )}
+
           <TextField
             label="Full Name"
             value={form.full_name}
@@ -150,8 +174,9 @@ export default function EmployeeFormDialog({
         <Button
           variant="contained"
           onClick={handleSubmit}
+          disabled={loading}
         >
-          Save
+          {loading ? 'Saving...' : 'Save'}
         </Button>
       </DialogActions>
     </Dialog>

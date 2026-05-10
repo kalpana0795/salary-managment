@@ -39,6 +39,8 @@ export default function EmployeeTable({
   page,
   pageSize,
   onPaginationChange,
+  onEdit,
+  onDelete
 }: Props) {
   const columns: GridColDef[] = [
     {

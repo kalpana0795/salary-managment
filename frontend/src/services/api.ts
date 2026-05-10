@@ -7,4 +7,15 @@ const api = axios.create({
   },
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const message =
+      error.response?.data?.error?.details ||
+      ['Something went wrong'];
+
+    return Promise.reject(message);
+  }
+);
+
 export default api;
