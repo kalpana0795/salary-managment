@@ -1,12 +1,16 @@
 import api from './api';
 
 export async function fetchSalarySummary(
-  country?: string
+  country?: string,
+  jobTitle?: string
 ) {
   const response = await api.get(
     '/insights/salary',
     {
-      params: { country },
+      params: {
+        country,
+        job_title: jobTitle,
+      }
     }
   );
 
@@ -14,12 +18,16 @@ export async function fetchSalarySummary(
 }
 
 export async function fetchDistribution(
-  country?: string
+  country?: string,
+  jobTitle?: string
 ) {
   const response = await api.get(
     '/insights/distribution',
     {
-      params: { country },
+      params: {
+        country,
+        job_title: jobTitle,
+      }
     }
   );
 
@@ -27,9 +35,10 @@ export async function fetchDistribution(
 }
 
 export async function fetchOutliers(
+  country?: string,
+  jobTitle?: string,
   page = 1,
-  perPage = 10,
-  country?: string
+  perPage = 10
 ) {
   const response = await api.get(
     '/insights/outliers',
@@ -38,6 +47,7 @@ export async function fetchOutliers(
         page,
         per_page: perPage,
         country,
+        job_title: jobTitle
       },
     }
   );

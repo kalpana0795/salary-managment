@@ -2,9 +2,10 @@ module Insights
   class OutliersService
     STDDEV_THRESHOLD = 2
 
-    def self.call(country: nil)
+    def self.call(country: nil, job_title: nil)
       scope = Employee.all
       scope = scope.where(country: country) if country.present?
+      scope = scope.where(job_title: job_title) if job_title.present?
 
       salaries = scope.pluck(:salary).map(&:to_f)
 
@@ -21,7 +22,7 @@ module Insights
       lower = mean - (STDDEV_THRESHOLD * stddev)
       upper = mean + (STDDEV_THRESHOLD * stddev)
 
-      Employee.where('salary < ? OR salary > ?', lower, upper)
+      scope.where('salary < ? OR salary > ?', lower, upper).order(salary: :desc)
     end
   end
 end

@@ -3,6 +3,7 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 
 import {
   ResponsiveContainer,
@@ -23,6 +24,8 @@ interface Props {
 export default function SalaryDistributionChart({
   data,
 }: Props) {
+  const theme = useTheme();
+
   return (
     <Card>
       <CardContent>
@@ -42,7 +45,10 @@ export default function SalaryDistributionChart({
             <YAxis />
             <Tooltip />
 
-            <Bar dataKey="count" />
+            <Bar
+              dataKey="count"
+              fill={theme.palette.primary.main}
+            />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -3,16 +3,6 @@
 class InsightsController < ApplicationController
   def salary
     result = Insights::SalarySummaryService.call(
-      country: params[:country]
-    )
-
-    render json: {
-      data: result
-    }
-  end
-
-  def salary_by_title
-    result = Insights::SalaryByTitleService.call(
       country: params[:country],
       job_title: params[:job_title]
     )
@@ -24,7 +14,8 @@ class InsightsController < ApplicationController
 
   def distribution
     result = Insights::DistributionService.call(
-      country: params[:country]
+      country: params[:country],
+      job_title: params[:job_title]
     )
 
     render json: {
@@ -37,7 +28,8 @@ class InsightsController < ApplicationController
     per_page = [params.fetch(:per_page, 10).to_i, 100].min
 
     employees = Insights::OutliersService.call(
-      country: params[:country]
+      country: params[:country],
+      job_title: params[:job_title]
     )
 
     total = employees.size

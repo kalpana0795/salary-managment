@@ -10,9 +10,10 @@ module Insights
       { label: '150k+',     min: 150_000, max: Float::INFINITY },
     ].freeze
 
-    def self.call(country: nil)
+    def self.call(country: nil, job_title: nil)
       scope = Employee.all
       scope = scope.where(country: country) if country.present?
+      scope = scope.where(job_title: job_title) if job_title.present?
 
       BUCKETS.map do |bucket|
         count = if bucket[:max] == Float::INFINITY

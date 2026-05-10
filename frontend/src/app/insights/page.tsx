@@ -11,6 +11,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import SummaryCards from '@/components/insights/SummaryCards';
 import SalaryDistributionChart from '@/components/insights/SalaryDistributionChart';
 import OutliersTable from '@/components/insights/OutliersTable';
+import InsightsFilters from '@/components/insights/InsightsFilters';
 
 import {
   fetchSalarySummary,
@@ -34,9 +35,15 @@ export default function InsightsPage() {
   const [outlierTotal, setOutlierTotal] =
     useState(0);
 
+  const [country, setCountry] =
+    useState('');
+
+  const [jobTitle, setJobTitle] =
+    useState('');
+
   useEffect(() => {
     loadInsights();
-  }, [outlierPage]);
+  }, [outlierPage, country, jobTitle]);
 
   async function loadInsights() {
     try {
@@ -47,9 +54,9 @@ export default function InsightsPage() {
         distributionData,
         outliersData,
       ] = await Promise.all([
-        fetchSalarySummary(),
-        fetchDistribution(),
-        fetchOutliers(outlierPage),
+        fetchSalarySummary(country, jobTitle),
+        fetchDistribution(country, jobTitle),
+        fetchOutliers(country, jobTitle, outlierPage, 10),
       ]);
 
       setSummary(summaryData);
@@ -78,6 +85,19 @@ export default function InsightsPage() {
         <Typography variant="h4">
           Salary Insights
         </Typography>
+
+        <InsightsFilters
+          country={country}
+          jobTitle={jobTitle}
+          onCountryChange={(value) => {
+            setCountry(value);
+            setOutlierPage(1);
+          }}
+          onJobTitleChange={(value) => {
+            setJobTitle(value);
+            setOutlierPage(1);
+          }}
+        />
 
         {summary && (
           <SummaryCards summary={summary} />
