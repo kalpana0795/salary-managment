@@ -8,6 +8,14 @@ import { Employee } from '@/types/employee';
 interface Props {
   employees: Employee[];
   loading: boolean;
+
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  onSortChange: (
+    field: string,
+    order: 'asc' | 'desc'
+  ) => void;
+
   total: number;
   page: number;
   pageSize: number;
@@ -47,6 +55,9 @@ const columns: GridColDef[] = [
 export default function EmployeeTable({
   employees,
   loading,
+  sortBy,
+  sortOrder,
+  onSortChange,
   total,
   page,
   pageSize,
@@ -58,6 +69,7 @@ export default function EmployeeTable({
         rows={employees}
         columns={columns}
         loading={loading}
+        sortingMode="server"
         rowCount={total}
         paginationMode="server"
         paginationModel={{
@@ -71,6 +83,14 @@ export default function EmployeeTable({
           );
         }}
         pageSizeOptions={[5, 10, 20, 50]}
+        onSortModelChange={(model) => {
+          if (model.length > 0) {
+            onSortChange(
+              model[0].field,
+              (model[0].sort as 'asc' | 'desc') || 'asc'
+            );
+          }
+        }}
       />
     </Paper>
   );

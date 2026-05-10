@@ -9,6 +9,7 @@ import Alert from '@mui/material/Alert';
 
 import AppLayout from '@/components/layout/AppLayout';
 import EmployeeTable from '@/components/employees/EmployeeTable';
+import EmployeeFilters from '@/components/employees/EmployeeFilters';
 
 import { Employee } from '@/types/employee';
 import { fetchEmployees } from '@/services/employees';
@@ -18,6 +19,14 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [country, setCountry] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+
+  const [sortBy, setSortBy] = useState('full_name');
+
+  const [sortOrder, setSortOrder] =
+    useState<'asc' | 'desc'>('asc');
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -25,7 +34,7 @@ export default function HomePage() {
 
   useEffect(() => {
     loadEmployees();
-  }, [page, pageSize]);
+  }, [page, pageSize, country, jobTitle, sortBy, sortOrder]);
 
   async function loadEmployees() {
     try {
@@ -34,6 +43,10 @@ export default function HomePage() {
       const response = await fetchEmployees({
         page,
         per_page: pageSize,
+        country,
+        job_title: jobTitle,
+        sort_by: sortBy,
+        order: sortOrder,
       });
 
       setEmployees(response.data);
@@ -61,17 +74,31 @@ export default function HomePage() {
         {loading ? (
           <CircularProgress />
         ) : (
-          <EmployeeTable
-            employees={employees}
-            loading={loading}
-            total={total}
-            page={page}
-            pageSize={pageSize}
-            onPaginationChange={(newPage, newPageSize) => {
-              setPage(newPage);
-              setPageSize(newPageSize);
-            }}
-          />
+          <>
+            <EmployeeFilters
+              country={country}
+              jobTitle={jobTitle}
+              onCountryChange={setCountry}
+              onJobTitleChange={setJobTitle}
+            />
+            <EmployeeTable
+              employees={employees}
+              loading={loading}
+              total={total}
+              page={page}
+              pageSize={pageSize}
+              onPaginationChange={(newPage, newPageSize) => {
+                setPage(newPage);
+                setPageSize(newPageSize);
+              }}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSortChange={(field, order) => {
+                setSortBy(field);
+                setSortOrder(order);
+              }}
+            />
+          </>
         )}
       </Stack>
     </AppLayout>
