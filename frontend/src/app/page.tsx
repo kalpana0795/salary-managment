@@ -161,21 +161,36 @@ export default function HomePage() {
           </Alert>
         )}
 
-        <Button
-          variant="contained"
-          onClick={() => {
-            setSelectedEmployee(null);
-            setDialogOpen(true);
+        <Stack
+          direction={{
+            xs: 'column',
+            md: 'row',
+          }}
+          spacing={2}
+          justifyContent="space-between"
+          alignItems={{
+            xs: 'stretch',
+            md: 'center',
           }}
         >
-          Add Employee
-        </Button>
-        <EmployeeFilters
-          country={country}
-          jobTitle={jobTitle}
-          onCountryChange={setCountry}
-          onJobTitleChange={setJobTitle}
-        />
+          <EmployeeFilters
+            country={country}
+            jobTitle={jobTitle}
+            onCountryChange={setCountry}
+            onJobTitleChange={setJobTitle}
+          />
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              setSelectedEmployee(null);
+              setFormErrors([]);
+              setDialogOpen(true);
+            }}
+          >
+            Add Employee
+          </Button>
+        </Stack>
 
         {loading ? (
           <CircularProgress />
