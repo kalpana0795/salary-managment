@@ -33,9 +33,18 @@ class InsightsController < ApplicationController
   end
 
   def outliers
+    page = params.fetch(:page, 1).to_i
+    per_page = [params.fetch(:per_page, 10).to_i, 100].min
+
     employees = Insights::OutliersService.call(
       country: params[:country]
     )
+
+    total = employees.size
+
+    employees = employees
+                  .offset((page - 1) * per_page)
+                  .limit(per_page)
 
     render json: {
       data: employees.as_json(
@@ -46,7 +55,12 @@ class InsightsController < ApplicationController
           country
           salary
         ]
-      )
+      ),
+      meta: {
+        page: page,
+        per_page: per_page,
+        total: total
+      }
     }
   end
 end

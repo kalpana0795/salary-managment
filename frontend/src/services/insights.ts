@@ -4,7 +4,7 @@ export async function fetchSalarySummary(
   country?: string
 ) {
   const response = await api.get(
-    '/insights/salary-summary',
+    '/insights/salary',
     {
       params: { country },
     }
@@ -27,14 +27,20 @@ export async function fetchDistribution(
 }
 
 export async function fetchOutliers(
+  page = 1,
+  perPage = 10,
   country?: string
 ) {
   const response = await api.get(
     '/insights/outliers',
     {
-      params: { country },
+      params: {
+        page,
+        per_page: perPage,
+        country,
+      },
     }
   );
 
-  return response.data.data;
+  return response.data;
 }
