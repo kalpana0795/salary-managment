@@ -167,10 +167,12 @@ export default function HomePage() {
             md: 'row',
           }}
           spacing={2}
-          justifyContent="space-between"
-          alignItems={{
-            xs: 'stretch',
-            md: 'center',
+          sx={{
+            justifyContent: 'space-between',
+            alignItems: {
+              xs: 'stretch',
+              md: 'center',
+            },
           }}
         >
           <EmployeeFilters
