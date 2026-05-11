@@ -19,8 +19,8 @@ module Insights
 
       stddev = Math.sqrt(variance)
 
-      lower = mean - (STDDEV_THRESHOLD * stddev)
-      upper = mean + (STDDEV_THRESHOLD * stddev)
+      lower = (mean - (STDDEV_THRESHOLD * stddev)).floor
+      upper = (mean + (STDDEV_THRESHOLD * stddev)).ceil
 
       scope.where('salary < ? OR salary > ?', lower, upper).order(salary: :desc)
     end
